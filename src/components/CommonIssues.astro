@@ -1,5 +1,6 @@
 ---
 import { useTranslations, type Lang } from '../i18n/utils';
+import { DISCORD_INVITE } from '../config';
 
 interface Props {
   lang: Lang;
@@ -75,7 +76,7 @@ const issues = t.issues.list.map((it, i) => ({
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
                 {t.issues.watchTutorial}
               </a>
-              <a href="#support" class="btn btn-ghost">{t.issues.stillBroken}</a>
+              <a href={DISCORD_INVITE} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">{t.issues.stillBroken}</a>
             </div>
           </article>
         ))}

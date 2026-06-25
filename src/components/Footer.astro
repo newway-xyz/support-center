@@ -1,12 +1,21 @@
 ---
 import Logo from './Logo.astro';
 import { useTranslations, type Lang } from '../i18n/utils';
+import { DISCORD_INVITE } from '../config';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+const colHrefs: string[][] = [
+  ['#versions', '#install', '#issues', '#config'],
+  ['#account', '#billing', '#', DISCORD_INVITE],
+  [DISCORD_INVITE, '#', '#', '#'],
+];
+
+const isExternal = (href: string) => href.startsWith('http');
 ---
 
 <footer class="site-footer">
@@ -16,11 +25,25 @@ const t = useTranslations(lang);
       <p>{t.footer.tagline}</p>
     </div>
 
-    {t.footer.cols.map((c) => (
+    {t.footer.cols.map((c, ci) => (
       <nav class="col">
         <h4>{c.title}</h4>
         <ul>
-          {c.links.map((l) => <li><a href="#">{l}</a></li>)}
+          {c.links.map((l, li) => {
+            const href = colHrefs[ci]?.[li] ?? '#';
+            const ext = isExternal(href);
+            return (
+              <li>
+                <a
+                  href={href}
+                  target={ext ? '_blank' : undefined}
+                  rel={ext ? 'noopener noreferrer' : undefined}
+                >
+                  {l}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </nav>
     ))}
