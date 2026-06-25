@@ -1,0 +1,244 @@
+---
+const issues = [
+  {
+    id: '01',
+    title: 'GTA crashes after injection',
+    blurb: 'Upscaling features conflict with injection. Turn them off and relaunch.',
+    steps: ['Disable DLSS', 'Disable FSR', 'Restart the game'],
+    tone: 'danger',
+  },
+  {
+    id: '02',
+    title: 'Sec_E_invalid_token (0x80090308)',
+    blurb: 'Token authentication is blocked at the network layer. Route NewWay through WARP.',
+    steps: ['Install Cloudflare WARP', 'Enable WARP before launching', 'Retry injection'],
+    tone: 'warn',
+    code: 'Sec_E_invalid_token (0x80090308)',
+  },
+  {
+    id: '03',
+    title: 'Failed to Inject',
+    blurb: 'Battleye or a residual game process is blocking the injector.',
+    steps: ['Confirm Battleye matches your build', 'Close all GTA processes in Task Manager', 'Re-run the injector as Administrator'],
+    tone: 'warn',
+  },
+  {
+    id: '04',
+    title: 'HWID is incorrect',
+    blurb: 'Hardware fingerprint changed since your last session. Reset it from the dashboard.',
+    steps: ['Open your account page', 'Choose Reset HWID', 'Launch again'],
+    tone: 'accent',
+  },
+  {
+    id: '05',
+    title: 'Game closes without error',
+    blurb: 'Storage-level corruption on the system drive can silently terminate the game.',
+    steps: ['Verify game integrity', 'Reinstall on another drive', 'Reboot and retry'],
+    tone: 'neutral',
+  },
+  {
+    id: '06',
+    title: 'RDR2 crashes',
+    blurb: 'NVIDIA telemetry threads conflict with the RDR2 build. Disable them at the service level.',
+    steps: ['Open NVIDIA Control Panel', 'Disable NVIDIA Telemetry service', 'Restart the PC'],
+    tone: 'danger',
+  },
+];
+---
+
+<section id="issues" class="section-issues">
+  <div class="container">
+    <header class="section-head">
+      <span class="eyebrow">03 — Most Common</span>
+      <h2>What problem are you having?</h2>
+      <p class="lede">Select an issue to see the fix. Most are resolved in three steps.</p>
+    </header>
+
+    <div class="issues-layout">
+      <ol class="issue-list glass" role="tablist" aria-label="Common issues">
+        {issues.map((issue, i) => (
+          <li>
+            <button
+              type="button"
+              class={`issue-item ${i === 0 ? 'is-active' : ''}`}
+              role="tab"
+              aria-selected={i === 0}
+              data-issue={issue.id}
+              data-search={`${issue.title} ${issue.blurb} ${issue.steps.join(' ')} ${issue.code || ''}`}
+            >
+              <span class="num mono">{issue.id}</span>
+              <span class="t">{issue.title}</span>
+              <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+            </button>
+          </li>
+        ))}
+      </ol>
+
+      <div class="fix-stage">
+        {issues.map((issue, i) => (
+          <article
+            class={`fix glass-strong ${i === 0 ? 'is-active' : ''}`}
+            data-fix={issue.id}
+            role="tabpanel"
+            aria-hidden={i !== 0}
+          >
+            <div class="fix-head">
+              <span class={`chip ${issue.tone === 'neutral' ? '' : issue.tone}`}>Fix · {issue.id}</span>
+              {issue.code && <span class="code-token mono">{issue.code}</span>}
+            </div>
+            <h3 class="fix-title">{issue.title}</h3>
+            <p class="fix-blurb">{issue.blurb}</p>
+
+            <ol class="steps">
+              {issue.steps.map((s, n) => (
+                <li>
+                  <span class="step-n mono">{String(n + 1).padStart(2, '0')}</span>
+                  <span class="step-t">{s}</span>
+                </li>
+              ))}
+            </ol>
+
+            <div class="fix-foot">
+              <a href="#" class="btn btn-soft">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                Watch Tutorial
+              </a>
+              <a href="#support" class="btn btn-ghost">Still broken? Open Ticket</a>
+            </div>
+          </article>
+        ))}
+
+        <div class="fix-empty glass-quiet" data-search-empty hidden>
+          <p>No matching issues. Try a different keyword.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const items = document.querySelectorAll<HTMLButtonElement>('.issue-item');
+  const panels = document.querySelectorAll<HTMLElement>('.fix');
+
+  items.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.issue;
+      items.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-selected', String(active));
+      });
+      panels.forEach((p) => {
+        const active = p.dataset.fix === id;
+        p.classList.toggle('is-active', active);
+        p.setAttribute('aria-hidden', String(!active));
+      });
+    });
+  });
+</script>
+
+<style>
+  .issues-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) 1fr;
+    gap: 22px;
+    align-items: start;
+  }
+
+  .issue-list { list-style: none; margin: 0; padding: 8px; display: flex; flex-direction: column; gap: 2px; }
+  .issue-item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 14px;
+    border-radius: 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text);
+    text-align: left;
+    transition: all 160ms ease;
+  }
+  .issue-item:hover { background: rgba(255,255,255,0.7); }
+  .issue-item.is-active {
+    background: linear-gradient(180deg, rgba(30,156,255,0.12), rgba(30,156,255,0.04));
+    border-color: rgba(30, 156, 255, 0.28);
+    color: var(--text);
+  }
+  .num {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--surface-strong);
+    border: 1px solid var(--border-strong);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+  .issue-item.is-active .num { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .t { font-size: 14px; font-weight: 600; line-height: 1.3; }
+  .chev { color: var(--text-quiet); transition: transform 160ms ease, color 160ms ease; }
+  .issue-item.is-active .chev { color: var(--accent-2); transform: translateX(2px); }
+
+  .fix-stage { position: relative; min-height: 320px; }
+  .fix {
+    padding: 30px 32px;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    animation: fadeUp 320ms ease both;
+  }
+  .fix.is-active { display: flex; }
+
+  .fix-head { display: flex; align-items: center; gap: 12px; }
+  .code-token {
+    font-size: 13px;
+    color: var(--text);
+    background: rgba(15, 28, 60, 0.05);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--hairline);
+  }
+  .fix-title { font-size: 26px; letter-spacing: -0.02em; }
+  .fix-blurb { font-size: 15px; max-width: 60ch; }
+
+  .steps { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--surface-quiet);
+    border: 1px solid var(--hairline);
+  }
+  .step-n {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #1ea4ff, #0e88e6);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(14, 136, 230, 0.32);
+    flex-shrink: 0;
+  }
+  .step-t { font-size: 15px; font-weight: 500; }
+
+  .fix-foot { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+
+  .fix-empty { padding: 24px; text-align: center; }
+  .fix-empty p { font-size: 14px; color: var(--text-muted); }
+
+  @media (max-width: 880px) {
+    .issues-layout { grid-template-columns: 1fr; }
+    .fix-stage { min-height: 0; }
+  }
+</style>

@@ -1,0 +1,148 @@
+---
+const guides = [
+  {
+    code: 'LS',
+    title: 'GTA V Legacy Solo',
+    summary: 'Solo & story sessions, fully offline from other players.',
+    battleye: 'OFF',
+    tone: 'warn',
+    minutes: 4,
+  },
+  {
+    code: 'ES',
+    title: 'GTA V Enhanced Solo',
+    summary: 'Private sessions shared with other modders only.',
+    battleye: 'OFF',
+    tone: 'warn',
+    minutes: 5,
+  },
+  {
+    code: 'BE',
+    title: 'GTA V Enhanced BE Bypass',
+    summary: 'Full public lobbies with Battleye left enabled.',
+    battleye: 'ON',
+    tone: 'success',
+    minutes: 6,
+  },
+  {
+    code: 'R2',
+    title: 'RDR2',
+    summary: 'Red Dead Redemption 2 single-player build.',
+    battleye: null,
+    tone: null,
+    minutes: 4,
+  },
+];
+---
+
+<section id="install" class="section-install">
+  <div class="container">
+    <header class="section-head">
+      <span class="eyebrow">02 — Setup</span>
+      <h2>Installation guides</h2>
+      <p class="lede">Pick your build and follow the steps. Click any guide to open it in a step-by-step view.</p>
+    </header>
+
+    <div class="grid cols-4 guides">
+      {guides.map((g) => (
+        <a
+          href="#"
+          class="guide glass"
+          data-search={`${g.title} install guide ${g.summary}`}
+        >
+          <div class="g-top">
+            <span class="g-code mono">{g.code}</span>
+            <span class="g-time">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              {g.minutes} min
+            </span>
+          </div>
+
+          <h3 class="g-title">{g.title}</h3>
+          <p class="g-summary">{g.summary}</p>
+
+          <div class="g-foot">
+            {g.battleye ? (
+              <span class={`be-pill ${g.tone}`}>BE {g.battleye}</span>
+            ) : (
+              <span class="be-pill neutral">Single-player</span>
+            )}
+            <span class="g-arrow">
+              Open Guide
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .guide {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 22px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 180ms ease, box-shadow 220ms ease;
+  }
+  .guide:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift), var(--shadow-ring); }
+
+  .g-top { display: flex; align-items: center; justify-content: space-between; }
+  .g-code {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--accent-soft), rgba(30,156,255,0.06));
+    color: var(--accent-2);
+    font-size: 14px;
+    font-weight: 800;
+    border: 1px solid rgba(30, 156, 255, 0.18);
+  }
+  .g-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-quiet);
+    font-weight: 600;
+  }
+
+  .g-title { font-size: 17px; line-height: 1.3; }
+  .g-summary { font-size: 13px; flex: 1; }
+
+  .g-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--hairline);
+  }
+  .be-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+  }
+  .be-pill.success { background: var(--success-soft); color: var(--success); }
+  .be-pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .be-pill.neutral { background: rgba(15, 28, 60, 0.06); color: var(--text-muted); }
+
+  .g-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-2);
+    transition: gap 160ms ease;
+  }
+  .guide:hover .g-arrow { gap: 10px; }
+</style>

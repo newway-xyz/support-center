@@ -1,0 +1,99 @@
+---
+const settings = [
+  { key: 'Windowed Borderless', value: 'ON', tone: 'success' },
+  { key: 'Native Monitor Resolution', value: 'SET', tone: 'accent' },
+  { key: 'Aspect Ratio', value: 'AUTO', tone: 'accent' },
+  { key: 'Pause Game On Focus Loss', value: 'OFF', tone: 'warn' },
+  { key: 'Direct Online Launch', value: 'OFF', tone: 'warn' },
+  { key: 'Inject on Main Menu', value: 'ON', tone: 'success' },
+  { key: 'DLSS', value: 'OFF', tone: 'warn' },
+  { key: 'FSR', value: 'OFF', tone: 'warn' },
+];
+---
+
+<section id="config" class="section-config">
+  <div class="container">
+    <header class="section-head">
+      <span class="eyebrow">04 — Recommended</span>
+      <h2>Game configuration</h2>
+      <p class="lede">Match these in-game settings for the most stable experience.</p>
+    </header>
+
+    <div class="config glass">
+      <ul class="config-list">
+        {settings.map((s) => (
+          <li class="row" data-search={`${s.key} ${s.value} game settings`}>
+            <span class="row-key">{s.key}</span>
+            <span class={`row-value ${s.tone}`}>{s.value}</span>
+          </li>
+        ))}
+      </ul>
+
+      <aside class="config-note">
+        <span class="chip accent">Pro tip</span>
+        <p>
+          DLSS and FSR are the leading cause of crashes after injection.
+          Disable both even if your monitor supports them — performance impact is negligible at 1080p/1440p.
+        </p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .config {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 28px;
+    padding: 26px 28px;
+    align-items: stretch;
+  }
+
+  .config-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 18px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--surface-quiet);
+    border: 1px solid var(--hairline);
+  }
+  .row-key { font-size: 14px; font-weight: 500; color: var(--text); }
+  .row-value {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+  }
+  .row-value.success { background: var(--success-soft); color: var(--success); }
+  .row-value.warn { background: var(--warn-soft); color: var(--warn); }
+  .row-value.accent { background: var(--accent-soft); color: var(--accent-2); }
+
+  .config-note {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 22px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(30,156,255,0.1), rgba(30,156,255,0.02));
+    border: 1px solid rgba(30, 156, 255, 0.18);
+  }
+  .config-note p { font-size: 13px; color: var(--text); }
+
+  @media (max-width: 980px) {
+    .config { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .config-list { grid-template-columns: 1fr; }
+  }
+</style>
