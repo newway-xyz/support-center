@@ -1,10 +1,11 @@
 ---
-const checks = [
-  'Installation Guide',
-  'Common Issues',
-  'Account Help',
-  'Payment Questions',
-];
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <section id="support" class="section-support">
@@ -13,15 +14,12 @@ const checks = [
       <div class="cta-decor" aria-hidden="true"></div>
 
       <div class="cta-body">
-        <span class="eyebrow">07 — Still Stuck?</span>
-        <h2>Didn't solve your problem?</h2>
-        <p class="lede">
-          If you've followed the guides and troubleshooting steps above, our support team is ready to help.
-          Please confirm you've checked the resources below before opening a ticket.
-        </p>
+        <span class="eyebrow">{t.cta.eyebrow}</span>
+        <h2>{t.cta.heading}</h2>
+        <p class="lede">{t.cta.lede}</p>
 
         <ul class="checks">
-          {checks.map((c) => (
+          {t.cta.checks.map((c) => (
             <li>
               <span class="tick">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
@@ -34,31 +32,31 @@ const checks = [
         <div class="cta-actions">
           <a href="#" class="btn btn-primary">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            Open Support Ticket
+            {t.cta.openTicket}
           </a>
           <a href="#" class="btn btn-ghost">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Join Discord
+            {t.cta.joinDiscord}
           </a>
         </div>
       </div>
 
       <aside class="cta-meta">
         <div class="meta-row">
-          <span class="meta-label">Average reply</span>
+          <span class="meta-label">{t.cta.meta.avgReply}</span>
           <span class="meta-value mono">&lt; 4h</span>
         </div>
         <div class="meta-row">
-          <span class="meta-label">Resolution rate</span>
+          <span class="meta-label">{t.cta.meta.resolution}</span>
           <span class="meta-value mono">96%</span>
         </div>
         <div class="meta-row">
-          <span class="meta-label">Languages</span>
-          <span class="meta-value mono">EN · PT · ES</span>
+          <span class="meta-label">{t.cta.meta.languages}</span>
+          <span class="meta-value mono">EN · PT · ZH · ES · RU</span>
         </div>
         <div class="meta-foot">
           <span class="status-dot"></span>
-          Team online now
+          {t.cta.meta.teamOnline}
         </div>
       </aside>
     </div>
@@ -68,21 +66,15 @@ const checks = [
 <style>
   .cta {
     position: relative;
-    display: grid;
-    grid-template-columns: 1fr 260px;
-    gap: 32px;
-    padding: 40px;
-    overflow: hidden;
-    border-radius: 28px;
+    display: grid; grid-template-columns: 1fr 260px; gap: 32px;
+    padding: 40px; overflow: hidden; border-radius: 28px;
   }
   .cta-decor {
-    position: absolute;
-    inset: -40%;
+    position: absolute; inset: -40%;
     background:
       radial-gradient(400px 240px at 80% 0%, rgba(30, 156, 255, 0.28), transparent 60%),
       radial-gradient(360px 200px at 0% 100%, rgba(30, 156, 255, 0.18), transparent 60%);
-    z-index: 0;
-    pointer-events: none;
+    z-index: 0; pointer-events: none;
   }
   .cta-body, .cta-meta { position: relative; z-index: 1; }
 
@@ -91,69 +83,32 @@ const checks = [
   .cta-body .lede { font-size: 15px; max-width: 56ch; }
 
   .checks {
-    list-style: none;
-    margin: 12px 0 8px;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    gap: 10px 24px;
-    width: max-content;
+    list-style: none; margin: 12px 0 8px; padding: 0;
+    display: grid; grid-template-columns: repeat(2, auto);
+    gap: 10px 24px; width: max-content;
   }
-  .checks li {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-  }
+  .checks li { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: var(--text); }
   .tick {
-    width: 22px;
-    height: 22px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 7px;
-    background: var(--success-soft);
-    color: var(--success);
+    width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 7px; background: var(--success-soft); color: var(--success);
   }
 
   .cta-actions { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
 
   .cta-meta {
-    background: var(--surface-strong);
-    border: 1px solid var(--border-strong);
-    border-radius: 18px;
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-self: start;
+    background: var(--surface-strong); border: 1px solid var(--border-strong); border-radius: 18px;
+    padding: 22px; display: flex; flex-direction: column; gap: 12px; align-self: start;
   }
-  .meta-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--hairline); }
+  .meta-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--hairline); gap: 12px; }
   .meta-row:nth-last-child(2) { border-bottom: none; padding-bottom: 0; }
   .meta-label { font-size: 12px; color: var(--text-quiet); font-weight: 600; }
-  .meta-value { font-size: 13px; color: var(--text); font-weight: 700; }
-  .meta-foot {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--success);
-    margin-top: 4px;
-  }
-  .status-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--success);
-    box-shadow: 0 0 0 4px rgba(22, 163, 107, 0.18);
-  }
+  .meta-value { font-size: 13px; color: var(--text); font-weight: 700; text-align: right; }
+  .meta-foot { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--success); margin-top: 4px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 4px rgba(22, 163, 107, 0.18); }
 
   @media (max-width: 880px) {
     .cta { grid-template-columns: 1fr; padding: 28px; }
     .checks { grid-template-columns: 1fr 1fr; width: auto; }
   }
-  @media (max-width: 480px) {
-    .checks { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 480px) { .checks { grid-template-columns: 1fr; } }
 </style>

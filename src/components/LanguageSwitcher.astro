@@ -1,0 +1,144 @@
+---
+import { LANGS, LANG_META, localizedPath, type Lang } from '../i18n/utils';
+
+interface Props {
+  current: Lang;
+}
+const { current } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const meta = LANG_META[current];
+---
+
+<div class="lang-switch" data-lang-switch>
+  <button
+    type="button"
+    class="lang-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    aria-label={`Language: ${meta.name}`}
+  >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M3 12h18"/>
+      <path d="M12 3a14 14 0 0 1 0 18"/>
+      <path d="M12 3a14 14 0 0 0 0 18"/>
+    </svg>
+    <span class="lang-code">{meta.short}</span>
+    <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+  </button>
+
+  <ul class="lang-menu glass-strong" role="listbox" aria-label="Languages">
+    {LANGS.map((l) => {
+      const m = LANG_META[l];
+      const href = localizedPath(l, base);
+      const isCurrent = l === current;
+      return (
+        <li role="option" aria-selected={isCurrent}>
+          <a href={href} class={isCurrent ? 'is-current' : ''}>
+            <span class="code mono">{m.short}</span>
+            <span class="name">{m.name}</span>
+            {isCurrent && (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            )}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-lang-switch]');
+  if (root) {
+    const trigger = root.querySelector<HTMLButtonElement>('.lang-trigger');
+    const menu = root.querySelector<HTMLUListElement>('.lang-menu');
+
+    const close = () => {
+      trigger?.setAttribute('aria-expanded', 'false');
+      menu?.classList.remove('is-open');
+    };
+
+    trigger?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = trigger.getAttribute('aria-expanded') !== 'true';
+      trigger.setAttribute('aria-expanded', String(open));
+      menu?.classList.toggle('is-open', open);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!root.contains(e.target as Node)) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  }
+</script>
+
+<style>
+  .lang-switch { position: relative; display: inline-block; }
+  .lang-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: var(--surface-strong);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: var(--shadow-soft);
+    transition: transform 120ms ease, background 160ms ease;
+  }
+  .lang-trigger:hover { transform: translateY(-1px); background: #fff; }
+  .lang-trigger svg { color: var(--text-quiet); }
+  .lang-trigger[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .chev { transition: transform 180ms ease; }
+  .lang-code { letter-spacing: 0.04em; min-width: 16px; text-align: center; }
+
+  .lang-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    min-width: 180px;
+    border-radius: 14px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
+    z-index: 60;
+  }
+  .lang-menu.is-open { opacity: 1; visibility: visible; transform: translateY(0); }
+  .lang-menu li { margin: 0; }
+  .lang-menu a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .lang-menu a:hover { background: var(--accent-soft); color: var(--accent-2); }
+  .lang-menu a.is-current { background: var(--accent-soft); color: var(--accent-2); font-weight: 600; }
+  .lang-menu .code {
+    width: 28px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: rgba(15, 28, 60, 0.05);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .lang-menu a.is-current .code { background: var(--accent); color: #fff; }
+  .lang-menu .name { line-height: 1; }
+</style>

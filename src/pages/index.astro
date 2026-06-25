@@ -10,19 +10,23 @@ import AccountHelp from '../components/AccountHelp.astro';
 import Billing from '../components/Billing.astro';
 import SupportCTA from '../components/SupportCTA.astro';
 import Footer from '../components/Footer.astro';
+import { useTranslations } from '../i18n/utils';
+
+const lang = 'en' as const;
+const t = useTranslations(lang);
 ---
 
-<Layout title="NewWay Support Center">
-  <Header />
+<Layout title={t.meta.title} description={t.meta.description} lang={lang}>
+  <Header lang={lang} />
   <main>
-    <Hero />
-    <VersionPicker />
-    <InstallGuides />
-    <CommonIssues />
-    <GameConfig />
-    <AccountHelp />
-    <Billing />
-    <SupportCTA />
+    <Hero lang={lang} />
+    <VersionPicker lang={lang} />
+    <InstallGuides lang={lang} />
+    <CommonIssues lang={lang} />
+    <GameConfig lang={lang} />
+    <AccountHelp lang={lang} />
+    <Billing lang={lang} />
+    <SupportCTA lang={lang} />
   </main>
-  <Footer />
+  <Footer lang={lang} />
 </Layout>

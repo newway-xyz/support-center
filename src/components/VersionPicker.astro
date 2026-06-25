@@ -1,46 +1,41 @@
 ---
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
 const versions = [
   {
     badge: 'GTA V',
     badgeTone: 'neutral',
     code: 'LS',
-    title: 'Legacy Solo',
-    summary: 'Solo & story sessions, isolated from everyone else.',
-    features: [
-      { text: 'Play alone', ok: true },
-      { text: 'Solo sessions', ok: true },
-      { text: 'No public sessions', ok: false },
-      { text: 'No sessions with other modders', ok: false },
-    ],
-    battleye: { label: 'OFF', tone: 'warn' },
+    title: t.versions.cards.legacy.title,
+    summary: t.versions.cards.legacy.summary,
+    features: t.versions.cards.legacy.features.map((text, i) => ({ text, ok: i < 2 })),
+    battleye: { label: t.versions.beOff, tone: 'warn' },
     recommended: false,
   },
   {
     badge: 'GTA V Enhanced',
     badgeTone: 'accent',
     code: 'ES',
-    title: 'Enhanced Solo',
-    summary: 'Private sessions shared with other modders only.',
-    features: [
-      { text: 'Play with other modders', ok: true },
-      { text: 'No public sessions', ok: false },
-      { text: 'Battleye must be disabled', ok: true, note: true },
-    ],
-    battleye: { label: 'MUST BE OFF', tone: 'warn' },
+    title: t.versions.cards.enhancedSolo.title,
+    summary: t.versions.cards.enhancedSolo.summary,
+    features: t.versions.cards.enhancedSolo.features.map((text, i) => ({ text, ok: i !== 1 })),
+    battleye: { label: t.versions.beMustOff, tone: 'warn' },
     recommended: false,
   },
   {
     badge: 'GTA V Enhanced',
     badgeTone: 'accent',
     code: 'BE',
-    title: 'Enhanced BE Bypass',
-    summary: 'The modern way to play — full public lobbies with everyone.',
-    features: [
-      { text: 'Public sessions', ok: true },
-      { text: 'Play with regular players', ok: true },
-      { text: 'Play with other modders', ok: true },
-    ],
-    battleye: { label: 'KEEP ON', tone: 'success' },
+    title: t.versions.cards.enhancedBE.title,
+    summary: t.versions.cards.enhancedBE.summary,
+    features: t.versions.cards.enhancedBE.features.map((text) => ({ text, ok: true })),
+    battleye: { label: t.versions.beOn, tone: 'success' },
     recommended: true,
   },
 ];
@@ -49,9 +44,9 @@ const versions = [
 <section id="versions" class="section-versions">
   <div class="container">
     <header class="section-head">
-      <span class="eyebrow">01 — Get Started</span>
-      <h2>Which version should I use?</h2>
-      <p class="lede">Pick the build that matches how you want to play. Battleye requirements differ per version.</p>
+      <span class="eyebrow">{t.versions.eyebrow}</span>
+      <h2>{t.versions.heading}</h2>
+      <p class="lede">{t.versions.lede}</p>
     </header>
 
     <div class="grid cols-3 versions">
@@ -60,7 +55,7 @@ const versions = [
           class={`card glass ${v.recommended ? 'is-recommended' : ''}`}
           data-search={`${v.badge} ${v.title} ${v.summary} ${v.features.map(f => f.text).join(' ')}`}
         >
-          {v.recommended && <span class="ribbon">★ Recommended</span>}
+          {v.recommended && <span class="ribbon">★ {t.versions.recommended}</span>}
 
           <div class="card-top">
             <span class={`badge ${v.badgeTone}`}>{v.badge}</span>
@@ -84,7 +79,7 @@ const versions = [
           </ul>
 
           <div class="battleye">
-            <span class="be-label">Battleye</span>
+            <span class="be-label">{t.versions.battleye}</span>
             <span class={`be-value ${v.battleye.tone}`}>{v.battleye.label}</span>
           </div>
         </article>
@@ -95,15 +90,11 @@ const versions = [
 
 <style>
   .section-versions { padding-top: 24px; }
-
   .versions { align-items: stretch; }
 
   .card {
-    position: relative;
-    padding: 26px 24px 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    position: relative; padding: 26px 24px 22px;
+    display: flex; flex-direction: column; gap: 14px;
     transition: transform 180ms ease, box-shadow 220ms ease;
   }
   .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift), var(--shadow-ring); }
@@ -115,81 +106,47 @@ const versions = [
   }
 
   .ribbon {
-    position: absolute;
-    top: -10px;
-    right: 20px;
+    position: absolute; top: -10px; right: 20px;
     background: linear-gradient(180deg, #1ea4ff, #0e88e6);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 6px 12px;
-    border-radius: 999px;
+    color: #fff; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 12px; border-radius: 999px;
     box-shadow: 0 6px 14px rgba(14, 136, 230, 0.4);
   }
 
   .card-top { display: flex; align-items: center; justify-content: space-between; }
   .badge {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 5px 10px;
-    border-radius: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 5px 10px; border-radius: 6px;
   }
   .badge.neutral { background: rgba(15, 28, 60, 0.06); color: var(--text-muted); }
   .badge.accent { background: var(--accent-soft); color: var(--accent-2); }
 
   .code {
-    width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    background: var(--surface-strong);
-    border: 1px solid var(--border-strong);
-    color: var(--accent-2);
-    font-size: 12px;
-    font-weight: 700;
+    width: 36px; height: 36px; display: inline-flex;
+    align-items: center; justify-content: center; border-radius: 10px;
+    background: var(--surface-strong); border: 1px solid var(--border-strong);
+    color: var(--accent-2); font-size: 12px; font-weight: 700;
   }
 
   .card .title { font-size: 22px; letter-spacing: -0.02em; }
   .summary { font-size: 14px; }
 
   .features { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-  .features li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1.4;
-  }
+  .features li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); line-height: 1.4; }
   .features li svg { flex-shrink: 0; padding: 4px; border-radius: 6px; width: 22px; height: 22px; }
   .features li.ok svg { background: var(--success-soft); color: var(--success); }
   .features li.no svg { background: var(--danger-soft); color: var(--danger); }
   .features li.no span { color: var(--text-muted); }
 
   .battleye {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 12px;
-    border-radius: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; border-radius: 12px;
     border: 1px dashed var(--border-strong);
-    background: rgba(255,255,255,0.5);
-    margin-top: 6px;
+    background: rgba(255,255,255,0.5); margin-top: 6px;
   }
   .be-label { font-size: 12px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
-  .be-value {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 6px;
-  }
+  .be-value { font-family: var(--font-mono); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
   .be-value.success { background: var(--success-soft); color: var(--success); }
   .be-value.warn { background: var(--warn-soft); color: var(--warn); }
   .be-value.danger { background: var(--danger-soft); color: var(--danger); }
