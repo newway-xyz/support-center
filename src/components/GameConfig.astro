@@ -91,9 +91,13 @@ const settings = [
   .config-note p { font-size: 13px; color: var(--text); }
 
   @media (max-width: 980px) {
-    .config { grid-template-columns: 1fr; }
+    .config { grid-template-columns: 1fr; gap: 22px; }
+  }
+  @media (max-width: 720px) {
+    .config-list { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
-    .config-list { grid-template-columns: 1fr; }
+    .config { padding: 18px 16px; }
+    .config-note { padding: 16px; }
   }
 </style>
